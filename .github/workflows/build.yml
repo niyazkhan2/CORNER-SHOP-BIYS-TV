@@ -8,6 +8,8 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
       - uses: actions/checkout@v4
 
@@ -25,9 +27,20 @@ jobs:
           gradle wrapper --gradle-version 8.9
           ./gradlew assembleRelease --no-daemon --stacktrace
 
-      - name: Upload APK
+      - name: Upload APK (build artifact)
         uses: actions/upload-artifact@v4
         with:
           name: corner-shop-boys-launcher
           path: app/build/outputs/apk/release/*.apk
           if-no-files-found: error
+
+      - name: Publish APK to Releases
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          APK=$(ls app/build/outputs/apk/release/*.apk | head -1)
+          cp "$APK" app-release.apk
+          gh release create latest app-release.apk \
+            --title "Corner Shop Boys launcher — latest APK" \
+            --notes "Auto-built on each push. Download app-release.apk below and sideload it onto the Fire TV." \
+          || gh release upload latest app-release.apk --clobber
