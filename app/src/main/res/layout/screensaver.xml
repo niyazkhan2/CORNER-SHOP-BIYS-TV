@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/saver_root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/black_saver">
+
+    <!-- This whole block drifts slowly to avoid burn-in -->
+    <LinearLayout
+        android:id="@+id/saver_block"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:orientation="vertical"
+        android:gravity="center">
+
+        <ImageView
+            android:layout_width="520dp"
+            android:layout_height="wrap_content"
+            android:adjustViewBounds="true"
+            android:contentDescription="@string/app_name"
+            android:src="@drawable/csb_logo"
+            android:tint="@color/ecru" />
+
+        <TextView
+            android:id="@+id/saver_clock"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="28dp"
+            android:fontFamily="serif"
+            android:textStyle="bold"
+            android:textColor="@color/ecru"
+            android:textSize="150sp"
+            android:includeFontPadding="false"
+            android:text="02:14" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <View
+                android:id="@+id/saver_dot"
+                android:layout_width="8dp"
+                android:layout_height="8dp"
+                android:layout_marginEnd="12dp"
+                android:background="@drawable/dot_red" />
+
+            <TextView
+                android:id="@+id/saver_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#8E8878"
+                android:textSize="14sp"
+                android:letterSpacing="0.3"
+                android:text="SATURDAY 21 NOVEMBER" />
+        </LinearLayout>
+    </LinearLayout>
+</FrameLayout>

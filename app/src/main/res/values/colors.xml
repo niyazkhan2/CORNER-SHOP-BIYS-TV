@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="ecru">#EFE6D2</color>
+    <color name="ecru_tile">#E2D6BC</color>
+    <color name="ecru_edge">#CDBF9F</color>
+    <color name="navy">#061D35</color>
+    <color name="navy_soft">#10294A</color>
+    <color name="red">#A20503</color>
+    <color name="ink">#061D35</color>
+    <color name="ink_soft">#4E5563</color>
+    <color name="ink_faint">#6B6457</color>
+    <color name="cream_text">#EFE6D2</color>
+    <color name="green_dot">#5FBF7F</color>
+    <color name="amber_dot">#F2A33A</color>
+    <color name="black_saver">#050505</color>
+</resources>

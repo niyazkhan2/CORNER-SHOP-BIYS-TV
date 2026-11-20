@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="150dp"
+    android:layout_height="140dp"
+    android:layout_marginEnd="@dimen/tile_gap"
+    android:background="@drawable/tile_shop"
+    android:orientation="vertical"
+    android:padding="18dp"
+    android:gravity="bottom"
+    android:focusable="true"
+    android:focusableInTouchMode="true">
+
+    <TextView
+        android:id="@+id/shop_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/navy"
+        android:textSize="22sp"
+        android:textStyle="bold"
+        android:text="@string/shop" />
+
+    <TextView
+        android:id="@+id/shop_sub"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="2dp"
+        android:textColor="@color/ink_soft"
+        android:textSize="12sp"
+        android:letterSpacing="0.08"
+        android:text="OPEN 'TIL LATE" />
+</LinearLayout>
