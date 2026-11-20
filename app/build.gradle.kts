@@ -11,8 +11,8 @@ android {
         applicationId = "com.niz.tvlauncher"
         minSdk = 22          // Fire OS 7 ~ Android 9, but 22 keeps older Fire sticks covered too
         targetSdk = 30       // staying <=30 avoids the strict package-visibility prompts on Fire OS
-        versionCode = 1
-        versionName = "1.0"
+        versionCode = 2
+        versionName = "1.1"
     }
 
     buildTypes {

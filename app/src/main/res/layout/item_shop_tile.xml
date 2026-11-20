@@ -1,31 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="150dp"
-    android:layout_height="140dp"
-    android:layout_marginEnd="@dimen/tile_gap"
-    android:background="@drawable/tile_shop"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginEnd="28dp"
     android:orientation="vertical"
-    android:padding="18dp"
-    android:gravity="bottom"
+    android:gravity="center_horizontal"
+    android:clipChildren="false"
+    android:clipToPadding="false"
     android:focusable="true"
     android:focusableInTouchMode="true">
 
-    <TextView
-        android:id="@+id/shop_label"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textColor="@color/navy"
-        android:textSize="22sp"
-        android:textStyle="bold"
-        android:text="@string/shop" />
+    <FrameLayout
+        android:id="@+id/card"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:background="@drawable/card_shop"
+        android:duplicateParentState="true"
+        android:elevation="6dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:gravity="bottom"
+            android:padding="20dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/inter_semibold"
+                android:textColor="@color/cream_text"
+                android:textSize="24sp"
+                android:text="@string/shop" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="3dp"
+                android:fontFamily="@font/inter_medium"
+                android:textColor="@color/cream_dim"
+                android:textSize="11sp"
+                android:letterSpacing="0.1"
+                android:text="OPEN 'TIL LATE" />
+        </LinearLayout>
+    </FrameLayout>
 
     <TextView
-        android:id="@+id/shop_sub"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="2dp"
-        android:textColor="@color/ink_soft"
-        android:textSize="12sp"
-        android:letterSpacing="0.08"
-        android:text="OPEN 'TIL LATE" />
+        android:layout_marginTop="14dp"
+        android:alpha="0"
+        android:text=" " />
 </LinearLayout>

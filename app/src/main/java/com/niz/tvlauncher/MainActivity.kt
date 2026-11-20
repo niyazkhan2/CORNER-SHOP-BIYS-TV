@@ -9,13 +9,12 @@ import android.graphics.Color
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
+import android.view.animation.DecelerateInterpolator
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.zxing.BarcodeFormat
 import com.google.zxing.qrcode.QRCodeWriter
@@ -31,20 +30,21 @@ class MainActivity : AppCompatActivity() {
     private lateinit var clock: TextView
     private lateinit var date: TextView
     private lateinit var dock: LinearLayout
+    private lateinit var dockWrap: View
+    private lateinit var logo: View
     private lateinit var qr: ImageView
     private lateinit var remoteHint: TextView
     private lateinit var wakeOverlay: View
     private lateinit var wakeLabel: TextView
 
-    private var ps5Dot: View? = null          // the status light on the PS5 tile
-    private var firstTile: View? = null       // focus target on launch
+    private var ps5Dot: View? = null
+    private var firstTile: View? = null
 
     private val timeFmt = SimpleDateFormat("HH:mm", Locale.UK)
     private val dateFmt = SimpleDateFormat("EEEE d MMMM", Locale.UK)
 
     private var remote: RemoteServer? = null
 
-    // Keep the clock in step with the system minute.
     private val timeReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) = refreshClock()
     }
@@ -56,6 +56,8 @@ class MainActivity : AppCompatActivity() {
         clock = findViewById(R.id.clock)
         date = findViewById(R.id.date)
         dock = findViewById(R.id.dock)
+        dockWrap = findViewById(R.id.dock_wrap)
+        logo = findViewById(R.id.logo)
         qr = findViewById(R.id.qr)
         remoteHint = findViewById(R.id.remote_hint)
         wakeOverlay = findViewById(R.id.wake_overlay)
@@ -70,9 +72,10 @@ class MainActivity : AppCompatActivity() {
         super.onResume()
         registerReceiver(timeReceiver, IntentFilter(Intent.ACTION_TIME_TICK))
         refreshClock()
-        buildDock()                 // reflect any newly installed / pinned apps
+        buildDock()
         showQr()
         pollPs5()
+        entrance()
         firstTile?.requestFocus()
     }
 
@@ -86,46 +89,54 @@ class MainActivity : AppCompatActivity() {
         super.onDestroy()
     }
 
-    // ---- Home behaviour ---------------------------------------------------
-
-    /** Swallow BACK on the home screen so it never leaves to a blank screen. */
     override fun onBackPressed() { /* stay home */ }
 
-    // ---- Clock ------------------------------------------------------------
+    // ---- Entrance motion ----
+    private fun entrance() {
+        logo.alpha = 0f
+        logo.scaleX = 0.96f
+        logo.scaleY = 0.96f
+        logo.animate().alpha(1f).scaleX(1f).scaleY(1f)
+            .setDuration(520).setInterpolator(DecelerateInterpolator()).start()
 
+        dockWrap.alpha = 0f
+        dockWrap.translationY = 26f
+        dockWrap.animate().alpha(1f).translationY(0f)
+            .setStartDelay(120).setDuration(480).setInterpolator(DecelerateInterpolator()).start()
+    }
+
+    // ---- Clock ----
     private fun refreshClock() {
         val now = Date()
         clock.text = timeFmt.format(now)
         date.text = dateFmt.format(now)
     }
 
-    // ---- Dock -------------------------------------------------------------
-
+    // ---- Dock ----
     private fun buildDock() {
         dock.removeAllViews()
         val inflater = LayoutInflater.from(this)
 
-        // 1) PS5
         val ps5 = inflater.inflate(R.layout.item_ps5_tile, dock, false)
         ps5Dot = ps5.findViewById(R.id.ps5_dot)
+        Focus.bind(ps5, ps5.findViewById(R.id.card))
         ps5.setOnClickListener { onPs5() }
         dock.addView(ps5)
         firstTile = ps5
 
-        // 2) Shop
         val shop = inflater.inflate(R.layout.item_shop_tile, dock, false)
+        Focus.bind(shop, shop.findViewById(R.id.card))
         shop.setOnClickListener { openShop() }
         dock.addView(shop)
 
-        // 3) Favourite apps (skip any not installed)
         val installed = Apps.loadAll(this).associateBy { it.packageName }
         for (pkg in Prefs.favourites(this)) {
             val app = installed[pkg] ?: continue
             dock.addView(appTile(inflater, app))
         }
 
-        // 4) All apps
         val all = inflater.inflate(R.layout.item_allapps_tile, dock, false)
+        Focus.bind(all, all.findViewById(R.id.card), all.findViewById(R.id.allapps_label))
         all.setOnClickListener { openAllApps() }
         dock.addView(all)
     }
@@ -136,31 +147,40 @@ class MainActivity : AppCompatActivity() {
         val name = tile.findViewById<TextView>(R.id.app_name)
         icon.setImageDrawable(app.icon)
         name.text = app.label
-        tile.setOnFocusChangeListener { _, focused ->
-            name.setTextColor(resources.getColor(if (focused) R.color.cream_text else R.color.ink, theme))
-        }
-        tile.setOnClickListener { startActivity(app.launchIntent) }
+        Focus.bind(tile, tile.findViewById(R.id.card), name)
+        tile.setOnClickListener { launchWithFade(app.launchIntent) }
         tile.setOnLongClickListener {
             Prefs.toggleFavourite(this, app.packageName)
             buildDock()
+            firstTile?.requestFocus()
             true
         }
         return tile
     }
 
-    // ---- Actions ----------------------------------------------------------
+    // ---- Actions ----
+    private fun launchWithFade(intent: Intent) {
+        startActivity(intent)
+        overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
+    }
 
-    private fun openShop() = startActivity(Intent(this, ShopActivity::class.java))
+    private fun openShop() {
+        startActivity(Intent(this, ShopActivity::class.java))
+        overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
+    }
 
-    private fun openAllApps() = startActivity(Intent(this, AllAppsActivity::class.java))
+    private fun openAllApps() {
+        startActivity(Intent(this, AllAppsActivity::class.java))
+        overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
+    }
 
     private fun onPs5() {
         val host = Prefs.ps5Host(this)
         val cred = Prefs.ps5Cred(this)
-
-        // Show the red "waking" screen immediately.
         wakeLabel.text = "WAKING UP · SWITCHING TO HDMI 2"
+        wakeOverlay.alpha = 0f
         wakeOverlay.visibility = View.VISIBLE
+        wakeOverlay.animate().alpha(1f).setDuration(220).start()
 
         thread {
             val ok = Ps5.wake(host, cred)
@@ -171,20 +191,11 @@ class MainActivity : AppCompatActivity() {
                     else -> "COULDN'T REACH PS5 · CHECK IT'S IN REST MODE"
                 }
             }
-            // Try to hand over to the console's HDMI input. On many TVs the PS5's own
-            // HDMI Device Link wakes the TV to its port; this is the app-side nudge.
-            switchToPs5Input()
-            ui.postDelayed({ wakeOverlay.visibility = View.GONE }, 3500)
+            ui.postDelayed({
+                wakeOverlay.animate().alpha(0f).setDuration(260)
+                    .withEndAction { wakeOverlay.visibility = View.GONE }.start()
+            }, 3500)
         }
-    }
-
-    /**
-     * Best-effort input switch. A non-system launcher can't force an HDMI port on every TV,
-     * so we rely on the PS5's HDMI Device Link to pull the TV over as it wakes. On a rooted
-     * device this is where a CEC/input-switch command would go (see INSTALL.md).
-     */
-    private fun switchToPs5Input() {
-        // Intentionally minimal: the wake packet + Device Link does the switching.
     }
 
     private fun pollPs5() {
@@ -204,8 +215,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    // ---- Phone remote -----------------------------------------------------
-
+    // ---- Phone remote ----
     private fun startRemote() {
         remote = RemoteServer(this) { cmd -> onRemoteCommand(cmd) }.also { it.start() }
     }
@@ -217,7 +227,7 @@ class MainActivity : AppCompatActivity() {
             "LEFT" -> move(View.FOCUS_LEFT)
             "RIGHT" -> move(View.FOCUS_RIGHT)
             "OK" -> currentFocus?.performClick()
-            "BACK" -> { /* home stays put */ }
+            "BACK" -> {}
             "HOME" -> firstTile?.requestFocus()
             "PS5" -> onPs5()
             "SHOP" -> openShop()
@@ -227,8 +237,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun move(direction: Int) {
         val cur = currentFocus ?: firstTile
-        val next = cur?.focusSearch(direction)
-        next?.requestFocus()
+        cur?.focusSearch(direction)?.requestFocus()
     }
 
     private fun showQr() {
@@ -237,8 +246,10 @@ class MainActivity : AppCompatActivity() {
             val size = 320
             val matrix = QRCodeWriter().encode(url, BarcodeFormat.QR_CODE, size, size)
             val bmp = Bitmap.createBitmap(size, size, Bitmap.Config.RGB_565)
+            val fg = Color.parseColor("#0B1E33")
+            val bg = Color.parseColor("#EFE6D2")
             for (x in 0 until size) for (y in 0 until size) {
-                bmp.setPixel(x, y, if (matrix[x, y]) Color.parseColor("#061D35") else Color.parseColor("#EFE6D2"))
+                bmp.setPixel(x, y, if (matrix[x, y]) fg else bg)
             }
             qr.setImageBitmap(bmp)
             remoteHint.text = "Scan for\nphone remote"

@@ -11,7 +11,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
-/** Full grid of every installed app. D-pad to move, OK to open, hold OK to pin/unpin to the dock. */
+/** Full grid of every installed app, with the same tvOS-style focus motion as the dock. */
 class AllAppsActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -21,6 +21,7 @@ class AllAppsActivity : AppCompatActivity() {
         val apps = Apps.loadAll(this)
         val grid = findViewById<RecyclerView>(R.id.grid)
         grid.layoutManager = GridLayoutManager(this, 6)
+        grid.setHasFixedSize(true)
         grid.adapter = AppsAdapter(apps)
     }
 
@@ -28,6 +29,7 @@ class AllAppsActivity : AppCompatActivity() {
         RecyclerView.Adapter<AppsAdapter.VH>() {
 
         inner class VH(v: View) : RecyclerView.ViewHolder(v) {
+            val card: View = v.findViewById(R.id.card)
             val icon: ImageView = v.findViewById(R.id.grid_icon)
             val name: TextView = v.findViewById(R.id.grid_name)
         }
@@ -41,15 +43,10 @@ class AllAppsActivity : AppCompatActivity() {
             val app = items[pos]
             h.icon.setImageDrawable(app.icon)
             h.name.text = app.label
-
-            // Cream text on the navy focused tile, ink text at rest.
-            h.itemView.setOnFocusChangeListener { _, focused ->
-                h.name.setTextColor(
-                    resources.getColor(if (focused) R.color.cream_text else R.color.ink, theme)
-                )
-            }
+            Focus.bind(h.itemView, h.card, h.name)
             h.itemView.setOnClickListener {
                 startActivity(app.launchIntent)
+                overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
             }
             h.itemView.setOnLongClickListener {
                 Prefs.toggleFavourite(this@AllAppsActivity, app.packageName)

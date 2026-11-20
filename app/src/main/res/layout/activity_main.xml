@@ -3,11 +3,14 @@
     android:id="@+id/root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/ecru"
-    android:padding="@dimen/screen_pad">
+    android:background="@drawable/bg_home"
+    android:clipChildren="false"
+    android:clipToPadding="false"
+    android:padding="56dp">
 
-    <!-- Top-left: clock + date (B-style) -->
+    <!-- Top-left: clock + date -->
     <LinearLayout
+        android:id="@+id/top_left"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="top|start"
@@ -17,10 +20,10 @@
             android:id="@+id/clock"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:fontFamily="serif"
-            android:textStyle="bold"
+            android:fontFamily="@font/inter_display_light"
             android:textColor="@color/ink"
-            android:textSize="@dimen/clock_size"
+            android:textSize="88sp"
+            android:letterSpacing="-0.02"
             android:includeFontPadding="false"
             android:text="21:47" />
 
@@ -28,14 +31,17 @@
             android:id="@+id/date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
+            android:layout_marginTop="8dp"
+            android:fontFamily="@font/inter_regular"
             android:textColor="@color/ink_soft"
-            android:textSize="16sp"
+            android:textSize="17sp"
+            android:letterSpacing="0.01"
             android:text="Friday 20 November" />
     </LinearLayout>
 
     <!-- Top-right: phone-remote QR -->
     <LinearLayout
+        android:id="@+id/top_right"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="top|end"
@@ -46,23 +52,25 @@
             android:id="@+id/remote_hint"
             android:layout_width="120dp"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="12dp"
+            android:layout_marginEnd="14dp"
             android:gravity="end"
+            android:fontFamily="@font/inter_regular"
             android:textColor="@color/ink_soft"
             android:textSize="13sp"
+            android:lineSpacingExtra="2dp"
             android:text="Scan for\nphone remote" />
 
         <ImageView
             android:id="@+id/qr"
-            android:layout_width="96dp"
-            android:layout_height="96dp"
+            android:layout_width="92dp"
+            android:layout_height="92dp"
             android:contentDescription="Phone remote QR code" />
     </LinearLayout>
 
     <!-- Centre: logo -->
     <ImageView
         android:id="@+id/logo"
-        android:layout_width="740dp"
+        android:layout_width="720dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:adjustViewBounds="true"
@@ -71,39 +79,48 @@
 
     <!-- Bottom: the dock -->
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:id="@+id/dock_wrap"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|center_horizontal"
         android:orientation="vertical"
-        android:gravity="center_horizontal">
+        android:gravity="center_horizontal"
+        android:clipChildren="false"
+        android:clipToPadding="false">
 
         <HorizontalScrollView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:scrollbars="none"
+            android:clipChildren="false"
             android:clipToPadding="false"
-            android:paddingStart="8dp"
-            android:paddingEnd="8dp">
+            android:paddingStart="24dp"
+            android:paddingEnd="24dp"
+            android:paddingTop="24dp"
+            android:paddingBottom="12dp">
 
             <LinearLayout
                 android:id="@+id/dock"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:gravity="center_vertical" />
+                android:gravity="top"
+                android:clipChildren="false"
+                android:clipToPadding="false" />
         </HorizontalScrollView>
 
         <TextView
             android:id="@+id/hint"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="14dp"
+            android:layout_marginTop="10dp"
+            android:fontFamily="@font/inter_regular"
             android:textColor="@color/ink_faint"
             android:textSize="13sp"
             android:text="@string/hint" />
     </LinearLayout>
 
-    <!-- PS5 "waking" overlay, hidden by default -->
+    <!-- PS5 waking overlay -->
     <LinearLayout
         android:id="@+id/wake_overlay"
         android:layout_width="match_parent"
@@ -116,20 +133,21 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:fontFamily="@font/inter_semibold"
             android:textColor="@color/cream_text"
-            android:textSize="110sp"
-            android:textStyle="bold"
-            android:letterSpacing="0.05"
+            android:textSize="120sp"
+            android:letterSpacing="0.04"
             android:text="PS5" />
 
         <TextView
             android:id="@+id/wake_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="18dp"
+            android:layout_marginTop="20dp"
+            android:fontFamily="@font/inter_medium"
             android:textColor="#F4D9CF"
             android:textSize="15sp"
-            android:letterSpacing="0.3"
+            android:letterSpacing="0.25"
             android:text="WAKING UP · SWITCHING TO HDMI 2" />
     </LinearLayout>
 </FrameLayout>

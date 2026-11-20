@@ -1,16 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="ecru">#EFE6D2</color>
-    <color name="ecru_tile">#E2D6BC</color>
-    <color name="ecru_edge">#CDBF9F</color>
-    <color name="navy">#061D35</color>
-    <color name="navy_soft">#10294A</color>
+    <color name="ecru_top">#F3ECDB</color>
+    <color name="ecru_bottom">#E7DBC3</color>
+    <color name="surface">#FBF6EA</color>
+    <color name="surface_soft">#F2E9D6</color>
+    <color name="ecru_edge">#D8CCB2</color>
+    <color name="navy">#0B1E33</color>
+    <color name="navy_soft">#16304C</color>
     <color name="red">#A20503</color>
-    <color name="ink">#061D35</color>
-    <color name="ink_soft">#4E5563</color>
-    <color name="ink_faint">#6B6457</color>
-    <color name="cream_text">#EFE6D2</color>
-    <color name="green_dot">#5FBF7F</color>
+    <color name="ink">#0B1E33</color>
+    <color name="ink_soft">#5C6472</color>
+    <color name="ink_faint">#8A8070</color>
+    <color name="cream_text">#F6EFDF</color>
+    <color name="cream_dim">#D9CCB4</color>
+    <color name="green_dot">#53C07A</color>
     <color name="amber_dot">#F2A33A</color>
-    <color name="black_saver">#050505</color>
+    <color name="black_saver">#040404</color>
 </resources>

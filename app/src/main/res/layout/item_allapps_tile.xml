@@ -1,27 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="@dimen/tile_h"
-    android:layout_height="@dimen/tile_h"
-    android:background="@drawable/tile_app"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:gravity="center"
+    android:gravity="center_horizontal"
+    android:clipChildren="false"
+    android:clipToPadding="false"
     android:focusable="true"
     android:focusableInTouchMode="true">
 
-    <TextView
-        android:id="@+id/allapps_glyph"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textColor="@color/ink_soft"
-        android:textSize="30sp"
-        android:text="▦" />
+    <FrameLayout
+        android:id="@+id/card"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:background="@drawable/card_surface"
+        android:duplicateParentState="true"
+        android:elevation="6dp">
+
+        <ImageView
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_gravity="center"
+            android:src="@drawable/ic_grid"
+            android:contentDescription="@string/all_apps" />
+    </FrameLayout>
 
     <TextView
         android:id="@+id/allapps_label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
-        android:textColor="@color/ink_soft"
-        android:textSize="12sp"
+        android:layout_marginTop="14dp"
+        android:alpha="0"
+        android:fontFamily="@font/inter_medium"
+        android:textColor="@color/ink"
+        android:textSize="15sp"
         android:text="@string/all_apps" />
 </LinearLayout>
