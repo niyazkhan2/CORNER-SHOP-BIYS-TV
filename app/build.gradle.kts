@@ -23,6 +23,14 @@ android {
         }
     }
 
+    // We sideload this, we don't publish to Play, so the "target API too low" lint rule
+    // (needed only for Play uploads) must not fail the release build.
+    lint {
+        checkReleaseBuilds = false
+        abortOnError = false
+        disable += "ExpiredTargetSdkVersion"
+    }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
